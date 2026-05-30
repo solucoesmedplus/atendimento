@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Med Plus+ WhatsApp CRM — Supabase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Camada de Carregamento Preloader -->
+    <div id="preloader">
+        <div class="loader-content">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgywsdWKH6rlDURrDoENalBtkXnhxike5bP4lesilVl-vBhsPrYmIIDLESb8VpR1e6AcRyxgXcyW8snNH4tSyIaJmTizACfOeqQYUjoaXhPE0MmMlHigietjYjKFLpEx5lccR3l10Q5RBwQMNBG8ENz6rAsMubobIyLRZa5DOLpWFtkMEH0Bx8_2LPVZFmb/s16000/logotipo-med-plus2025-1.png" alt="Med Plus+ Loading">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <img class="login-logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiU3J-LLB6bodx_q6Nzvij2FXKRUjl6-Wefi9HGKFSqUpmKyLmXFNnhR_sZ8qIMW5Y7jJQHyvO4GdDXep4RJjBm6GN7jVjv0ylDWj05Jomsivs6JLrNPsMZJAQDNbbCVB3E55SO5wD6-soJJMOk2TaFIEvyopP7aoNssNZpN3LhcLSmNQrsPv7HwDMaI7vi/s320/MD%20Logo%20principal_Vertical.png" alt="Med Plus+" />
+      <h1>Med Plus+ CRM</h1>
+      <p>Versão Supabase Realtime</p>
+
+      <form id="loginForm" class="form-stack">
+        <label>
+          E-mail
+          <input id="loginEmail" type="email" placeholder="admin@medplus.local" required autocomplete="username" />
+        </label>
+        <label>
+          Senha
+          <input id="loginSenha" type="password" placeholder="123456" required autocomplete="current-password" />
+        </label>
+        <button id="btnLogin" type="submit" class="primary-btn">Entrar</button>
+      </form>
+      <div id="loginMsg" class="message-box hidden"></div>
+    </div>
+  </section>
+
+  <main id="appScreen" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiU3J-LLB6bodx_q6Nzvij2FXKRUjl6-Wefi9HGKFSqUpmKyLmXFNnhR_sZ8qIMW5Y7jJQHyvO4GdDXep4RJjBm6GN7jVjv0ylDWj05Jomsivs6JLrNPsMZJAQDNbbCVB3E55SO5wD6-soJJMOk2TaFIEvyopP7aoNssNZpN3LhcLSmNQrsPv7HwDMaI7vi/s320/MD%20Logo%20principal_Vertical.png" alt="Med Plus+" />
+        <div>
+          <strong>Med Plus+</strong>
+          <span>Supabase Realtime</span>
+        </div>
+      </div>
+
+      <div class="user-panel">
+        <div id="userName" class="user-name">Usuário</div>
+        <button id="btnLogout" type="button" class="ghost-btn">Sair</button>
+      </div>
+
+      <div id="adminMenu" class="admin-menu hidden">
+        <button id="btnAdminUsuarios" type="button" class="admin-btn">👥 Usuários</button>
+        <button id="btnAdminDepartamentos" type="button" class="admin-btn">🏢 Departamentos</button>
+        <button id="btnAdminEtiquetas" type="button" class="admin-btn">🏷️ Etiquetas</button>
+        <button id="btnAdminClientes" type="button" class="admin-btn">📇 Clientes</button>
+        <button id="btnAdminRapidas" type="button" class="admin-btn">💬 Mensagens rápidas</button>
+        <button id="btnAdminEvolution" type="button" class="admin-btn">⚙️ Evolution API</button>
+      </div>
+
+      <div class="filters-card">
+        <div class="search-filter-row">
+          <label class="search-field">
+            Buscar cliente / telefone
+            <input id="searchInput" type="search" placeholder="Digite para filtrar..." />
+          </label>
+
+          <button id="btnToggleFilters" type="button" class="filter-toggle-btn" title="Abrir filtros" aria-label="Abrir filtros" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5h18l-7 8v5l-4 2v-7L3 5z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div id="filtersAccordion" class="filters-accordion hidden">
+          <div class="filter-grid">
+            <label>
+              Status
+              <select id="statusFilter">
+                <option value="">Todos</option>
+                <option value="SEM_SETOR">Sem setor</option>
+                <option value="EM_ATENDIMENTO">Em atendimento</option>
+                <option value="EM_NEGOCIACAO">Em negociação</option>
+                <option value="FINALIZADO">Finalizado</option>
+              </select>
+            </label>
+            <label>
+              Departamento
+              <select id="departamentoFilter">
+                <option value="">Todos</option>
+              </select>
+            </label>
+            <label>
+              Atendente
+              <select id="atendenteFilter">
+                <option value="">Todos</option>
+              </select>
+            </label>
+            <label>
+              Etiqueta
+              <select id="etiquetaFilter">
+                <option value="">Todas</option>
+              </select>
+            </label>
+            <label>
+              Data
+              <select id="dateFilter">
+                <option value="">Todas</option>
+                <option value="HOJE">Hoje</option>
+                <option value="7DIAS">Últimos 7 dias</option>
+                <option value="PERIODO">Por período</option>
+              </select>
+            </label>
+            <div id="datePeriodFields" class="date-period-fields hidden">
+              <label>
+                De
+                <input id="dateFrom" type="date" />
+              </label>
+              <label>
+                Até
+                <input id="dateTo" type="date" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="conversation-section" aria-label="Lista de atendimentos">
+        <div class="list-header">
+          <strong>Atendimentos <span id="conversationCount" class="conversation-count">0</span></strong>
+          <button id="btnReload" type="button" class="icon-btn" title="Atualizar">⟳</button>
+        </div>
+
+        <div id="conversationList" class="conversation-list"></div>
+      </section>
+    </aside>
+
+    <section class="chat-panel">
+      <header class="chat-header">
+        <div class="avatar" id="chatAvatar">?</div>
+        <div class="chat-title-box">
+          <h2 id="chatTitle">Selecione uma conversa</h2>
+          <p id="chatSubtitle">Áudios, imagens e vídeos serão exibidos direto na conversa.</p>
+        </div>
+        <div id="chatStatusBadge" class="status-badge hidden"></div>
+      </header>
+
+      <section id="chatControls" class="chat-controls hidden">
+        <details id="statusEtiquetaAccordion" class="action-panel status-etiqueta-panel">
+          <summary role="button" tabindex="0">Status e etiqueta do atendimento</summary>
+          <div class="controls-grid status-etiqueta-grid">
+            <label>
+              Status do atendimento
+              <select id="chatStatusSelect">
+                <option value="SEM_SETOR">Sem setor</option>
+                <option value="EM_ATENDIMENTO">Em atendimento</option>
+                <option value="EM_NEGOCIACAO">Em negociação</option>
+                <option value="FINALIZADO">Finalizado</option>
+              </select>
+            </label>
+            <label>
+              Etiqueta
+              <select id="chatEtiquetaSelect">
+                <option value="">Selecione...</option>
+              </select>
+            </label>
+            <button id="btnSalvarStatusEtiqueta" type="button" class="primary-btn compact-btn">Salvar status/etiqueta</button>
+          </div>
+        </details>
+
+        <details id="transferAccordion" class="action-panel">
+          <summary role="button" tabindex="0">Transferência de atendimento</summary>
+          <div class="action-grid">
+            <label>
+              Setor de destino
+              <select id="transferDepartamentoSelect">
+                <option value="">Selecione...</option>
+              </select>
+            </label>
+            <label>
+              Atendente do setor
+              <select id="transferAtendenteSelect">
+                <option value="">Selecione primeiro o setor</option>
+              </select>
+            </label>
+            <label class="full-field">
+              Observação da transferência
+              <input id="transferObsInput" type="text" placeholder="Ex.: Enviar orçamento para o cliente" />
+            </label>
+            <button id="btnTransferir" type="button" class="primary-btn compact-btn">Transferir</button>
+          </div>
+        </details>
+
+        <details id="notaAccordion" class="action-panel">
+          <summary role="button" tabindex="0">Nota interna oculta ao cliente</summary>
+          <div class="note-grid">
+            <textarea id="notaInternaInput" rows="3" placeholder="Digite uma observação interna. O cliente não verá esta nota."></textarea>
+            <button id="btnSalvarNota" type="button" class="primary-btn compact-btn">Salvar nota interna</button>
+          </div>
+        </details>
+      </section>
+
+      <div id="messagesBox" class="messages-box empty-state">
+        <div>
+          <h3>Nenhuma conversa selecionada</h3>
+          <p>Quando uma mensagem chegar no Supabase, ela aparecerá quase em tempo real.</p>
+        </div>
+      </div>
+
+      <footer class="composer composer-with-media">
+        <input id="mediaInput" type="file" class="hidden" accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar" />
+
+        <div id="mediaPreviewBox" class="media-preview-box hidden">
+          <div id="mediaPreviewContent" class="media-preview-content"></div>
+          <button id="btnClearMedia" type="button" class="icon-btn" title="Remover anexo">✕</button>
+        </div>
+
+        <div id="quickRepliesBox" class="quick-replies-box hidden"></div>
+        <div id="emojiPickerBox" class="emoji-picker-box hidden" aria-label="Seletor de emojis"></div>
+        <div id="replyPreviewBox" class="reply-preview-box hidden"></div>
+
+        <div class="composer-row">
+          <button id="btnAttach" type="button" class="composer-icon-btn" title="Anexar arquivo" disabled>📎</button>
+          <button id="btnEmoji" type="button" class="composer-icon-btn" title="Inserir emoji" aria-label="Inserir emoji" disabled>😊</button>
+          <button id="btnMic" type="button" class="composer-icon-btn" title="Gravar áudio" disabled>🎙️</button>
+          <textarea id="messageInput" rows="1" placeholder="Digite sua resposta, legenda ou / para mensagens rápidas..." disabled></textarea>
+          <button id="btnSend" type="button" class="primary-btn" disabled>Enviar</button>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+
+  <dialog id="adminModal" class="admin-modal">
+    <div class="admin-modal-card">
+      <header class="admin-modal-header">
+        <div>
+          <strong>Área Administrativa</strong>
+          <span id="adminModalSubtitle">Gerencie os dados do sistema</span>
+        </div>
+        <button id="btnCloseAdminModal" type="button" class="icon-btn" aria-label="Fechar">✕</button>
+      </header>
+
+      <nav class="admin-tabs" aria-label="Navegação administrativa">
+        <button id="tabUsuarios" type="button" class="admin-tab active" data-admin-tab="usuarios">Usuários</button>
+        <button id="tabDepartamentos" type="button" class="admin-tab" data-admin-tab="departamentos">Departamentos</button>
+        <button id="tabEtiquetas" type="button" class="admin-tab" data-admin-tab="etiquetas">Etiquetas</button>
+        <button id="tabClientes" type="button" class="admin-tab" data-admin-tab="clientes">Clientes</button>
+        <button id="tabRapidas" type="button" class="admin-tab" data-admin-tab="rapidas">Mensagens rápidas</button>
+        <button id="tabEvolution" type="button" class="admin-tab" data-admin-tab="evolution">Evolution API</button>
+      </nav>
+
+      <section id="adminTabUsuarios" class="admin-section active">
+        <form id="usuarioForm" class="admin-form">
+          <input id="usuarioId" type="hidden" />
+          <label>Nome do atendente
+            <input id="usuarioNome" type="text" placeholder="Ex.: Paulo Corrêa" required />
+          </label>
+          <label>E-mail
+            <input id="usuarioEmail" type="email" placeholder="email@dominio.com" required />
+          </label>
+          <label>Senha
+            <input id="usuarioSenha" type="password" placeholder="Nova senha ou deixe em branco para manter" />
+          </label>
+          <label>Perfil
+            <select id="usuarioPerfil">
+              <option value="ATENDENTE">Atendente</option>
+              <option value="ADMIN">Administrador (ADMIN)</option>
+            </select>
+          </label>
+          <label class="check-inline">
+            <input id="usuarioAtivo" type="checkbox" checked /> Usuário ativo
+          </label>
+          <div class="admin-full-field">
+            <strong>Setores em que o atendente atua</strong>
+            <div id="usuarioDepartamentosChecks" class="check-grid"></div>
+          </div>
+          <div class="admin-actions-row">
+            <button id="btnSalvarUsuario" type="submit" class="primary-btn compact-btn">Salvar usuário</button>
+            <button id="btnLimparUsuarioForm" type="button" class="ghost-btn">Limpar</button>
+          </div>
+        </form>
+        <div class="admin-table-toolbar">
+          <input id="usuarioBusca" type="search" placeholder="Pesquisar usuário..." />
+          <button id="btnExcluirUsuariosSelecionados" type="button" class="danger-btn">Excluir selecionados</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th><input id="chkUsuariosTodos" type="checkbox" /></th>
+                <th>Nome</th><th>E-mail</th><th>Perfil</th><th>Setores</th><th>Status</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="usuariosTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="adminTabDepartamentos" class="admin-section">
+        <form id="departamentoForm" class="admin-form compact-admin-form">
+          <input id="departamentoId" type="hidden" />
+          <label>Nome
+            <input id="departamentoNome" type="text" placeholder="Ex.: Suporte Técnico" required />
+          </label>
+          <label>Descrição
+            <input id="departamentoDescricao" type="text" placeholder="Descrição do setor" />
+          </label>
+          <label class="check-inline">
+            <input id="departamentoAtivo" type="checkbox" checked /> Departamento ativo
+          </label>
+          <div class="admin-actions-row">
+            <button id="btnSalvarDepartamento" type="submit" class="primary-btn compact-btn">Salvar departamento</button>
+            <button id="btnLimparDepartamentoForm" type="button" class="ghost-btn">Limpar</button>
+          </div>
+        </form>
+        <div class="admin-table-toolbar">
+          <input id="departamentoBusca" type="search" placeholder="Pesquisar departamento..." />
+          <button id="btnExcluirDepartamentosSelecionados" type="button" class="danger-btn">Excluir selecionados</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th><input id="chkDepartamentosTodos" type="checkbox" /></th><th>Nome</th><th>Descrição</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="departamentosTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="adminTabEtiquetas" class="admin-section">
+        <form id="etiquetaForm" class="admin-form compact-admin-form">
+          <input id="etiquetaId" type="hidden" />
+          <label>Nome
+            <input id="etiquetaNome" type="text" placeholder="Ex.: Cliente" required />
+          </label>
+          <label>Cor
+            <input id="etiquetaCor" type="color" value="#2086c2" />
+          </label>
+          <label class="check-inline">
+            <input id="etiquetaAtivo" type="checkbox" checked /> Etiqueta ativa
+          </label>
+          <div class="admin-actions-row">
+            <button id="btnSalvarEtiqueta" type="submit" class="primary-btn compact-btn">Salvar etiqueta</button>
+            <button id="btnLimparEtiquetaForm" type="button" class="ghost-btn">Limpar</button>
+          </div>
+        </form>
+        <div class="admin-table-toolbar">
+          <input id="etiquetaBusca" type="search" placeholder="Pesquisar etiqueta..." />
+          <button id="btnExcluirEtiquetasSelecionadas" type="button" class="danger-btn">Excluir selecionadas</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th><input id="chkEtiquetasTodas" type="checkbox" /></th><th>Nome</th><th>Cor</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="etiquetasTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="adminTabClientes" class="admin-section">
+        <form id="clienteForm" class="admin-form">
+          <input id="clienteId" type="hidden" />
+          <label>Nome
+            <input id="clienteNome" type="text" placeholder="Nome do cliente" />
+          </label>
+          <label>Telefone
+            <input id="clienteTelefone" type="text" placeholder="5516999999999" required />
+          </label>
+          <label>Tipo
+            <select id="clienteTipo">
+              <option value="">Selecione...</option>
+              <option value="CLIENTE">Cliente</option>
+              <option value="PARCEIRO">Parceiro</option>
+              <option value="PRESTADOR">Prestador</option>
+            </select>
+          </label>
+          <label>Foto URL
+            <input id="clienteFotoUrl" type="url" placeholder="https://..." />
+          </label>
+          <label class="check-inline">
+            <input id="clienteAtivo" type="checkbox" checked /> Cliente ativo
+          </label>
+          <div class="admin-actions-row">
+            <button id="btnSalvarCliente" type="submit" class="primary-btn compact-btn">Salvar cliente</button>
+            <button id="btnLimparClienteForm" type="button" class="ghost-btn">Limpar</button>
+          </div>
+        </form>
+        <div class="admin-table-toolbar">
+          <input id="clienteBusca" type="search" placeholder="Pesquisar cliente / telefone..." />
+          <button id="btnAtualizarFotosClientes" type="button" class="ghost-btn">🖼️ Atualizar fotos</button>
+          <button id="btnExcluirClientesSelecionados" type="button" class="danger-btn">Excluir selecionados</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th><input id="chkClientesTodos" type="checkbox" /></th><th>Foto</th><th>Nome</th><th>Telefone</th><th>Tipo</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="clientesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="adminTabRapidas" class="admin-section">
+        <form id="rapidaForm" class="admin-form quick-admin-form">
+          <input id="rapidaId" type="hidden" />
+          <label>Título
+            <input id="rapidaTitulo" type="text" placeholder="Ex.: Saudação inicial" required />
+          </label>
+          <label>Atalho
+            <input id="rapidaAtalho" type="text" placeholder="Ex.: saudacao" required />
+          </label>
+          <label>Ordem
+            <input id="rapidaOrdem" type="number" min="0" step="1" value="0" />
+          </label>
+          <label class="check-inline">
+            <input id="rapidaAtiva" type="checkbox" checked /> Mensagem ativa
+          </label>
+          <label class="admin-full-field">Texto pré-definido
+            <textarea id="rapidaTexto" rows="7" placeholder="Digite ou cole o texto pré-definido. Pode usar Enter para pular linha normalmente." required></textarea>
+          </label>
+          <div class="admin-actions-row">
+            <button id="btnSalvarRapida" type="submit" class="primary-btn compact-btn">Salvar mensagem rápida</button>
+            <button id="btnLimparRapidaForm" type="button" class="ghost-btn">Limpar</button>
+          </div>
+          <p class="muted-small admin-hint">Dica: no atendimento, digite <strong>/</strong> no campo de resposta para listar as mensagens rápidas. Exemplo: <strong>/orc</strong> filtra por orçamento.</p>
+        </form>
+        <div class="admin-table-toolbar">
+          <input id="rapidaBusca" type="search" placeholder="Pesquisar por título, atalho ou texto..." />
+          <button id="btnExcluirRapidasSelecionadas" type="button" class="danger-btn">Excluir selecionadas</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th><input id="chkRapidasTodas" type="checkbox" /></th><th>Título</th><th>Atalho</th><th>Texto</th><th>Ordem</th><th>Status</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="rapidasTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="adminTabEvolution" class="admin-section">
+        <form id="evolutionForm" class="admin-form evolution-admin-form">
+          <label>URL Base da Evolution API
+            <input id="evolutionBaseUrl" type="url" placeholder="https://evolution-api-production-medplus.up.railway.app" required />
+          </label>
+          <label>Nome da Instância
+            <input id="evolutionInstanceName" type="text" placeholder="medplus" required />
+          </label>
+          <label>API Key
+            <div class="password-row">
+              <input id="evolutionApiKey" type="password" placeholder="Cole a API Key completa ou deixe vazio para manter a atual" autocomplete="off" />
+              <button id="btnToggleEvolutionKey" type="button" class="icon-btn" title="Mostrar/ocultar API Key">👁️</button>
+            </div>
+            <small id="evolutionKeyHelp" class="muted-small">Se já existir uma API Key salva, deixe em branco para manter.</small>
+          </label>
+          <label>URL Webhook Supabase
+            <input id="evolutionWebhookUrl" type="url" placeholder="https://SEU-PROJETO.supabase.co/functions/v1/evolution-webhook" required />
+          </label>
+          <div class="admin-actions-row evolution-actions-row">
+            <button id="btnSalvarEvolution" type="submit" class="primary-btn compact-btn">Salvar configuração</button>
+            <button id="btnTestarEvolution" type="button" class="ghost-btn">Testar API</button>
+            <button id="btnCriarInstancia" type="button" class="ghost-btn">Criar instância</button>
+            <button id="btnConfigurarWebhook" type="button" class="ghost-btn">Configurar webhook</button>
+            <button id="btnGerarQrCode" type="button" class="primary-btn compact-btn">Gerar QR Code</button>
+            <button id="btnVerificarConexao" type="button" class="ghost-btn">Verificar conexão</button>
+            <button id="btnDesconectarEvolution" type="button" class="danger-btn">Desconectar</button>
+          </div>
+        </form>
+
+        <div class="evolution-status-grid">
+          <section class="evolution-panel">
+            <strong>Status / Retorno</strong>
+            <pre id="evolutionResultado" class="evolution-result">Nenhuma ação executada ainda.</pre>
+          </section>
+          <section class="evolution-panel evolution-qr-panel">
+            <strong>QR Code / Pareamento</strong>
+            <div id="evolutionQrBox" class="evolution-qr-box">
+              <span>Depois de salvar, clique em “Gerar QR Code”.</span>
+            </div>
+          </section>
+        </div>
+
+        <div class="evolution-help-card">
+          <strong>Como conectar:</strong>
+          <p>Depois que o QR Code aparecer, abra o WhatsApp no celular: <strong>Configurações &gt; Dispositivos conectados &gt; Conectar dispositivo</strong>.</p>
+          <p class="muted-small">Esta área usa a mesma Evolution API configurada no Railway e grava a configuração no Supabase.</p>
+        </div>
+      </section>
+    </div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <div id="notificationCenter" class="notification-center" aria-live="polite" aria-atomic="false"></div>
+</body>
+</html>
