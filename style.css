@@ -306,7 +306,7 @@ button { font: inherit; cursor: pointer; }
     linear-gradient(180deg, rgba(4, 20, 27, .10), rgba(4, 20, 27, .30)),
     var(--whatsapp-pattern);
   background-repeat: repeat, repeat;
-  background-size: auto, 225px 400px;
+  background-size: auto, 1920px 1080px;
   background-position: center center, center top;
   background-attachment: local, local;
 }
