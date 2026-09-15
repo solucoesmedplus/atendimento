@@ -5268,3 +5268,14 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(sincronizarPeloEstado, 250);
   });
 })();
+
+//PRELOADER
+// Remove o Preloader após o carregamento completo da página
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+
+    // Pequeno delay para garantir que a renderização foi concluída
+    setTimeout(() => {
+        preloader.classList.add('loaded');
+    }, 1000);
+});
